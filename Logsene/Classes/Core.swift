@@ -52,7 +52,7 @@ public func LogseneInit(_ appToken: String, type: String, receiverUrl: String = 
         do {
             Logsene.worker = try Worker(client: client, type: type, maxOfflineFileSize: maxOfflineFileSize, maxOfflineFiles: maxOfflineFiles, automaticLocationEnriching: automaticLocationEnriching, useLocationOnlyInForeground: useLocationOnlyInForeground)
         } catch (let err) {
-            logger.error("Unable to initialize Logsene worker: \(err)")
+            logger.error("Unable to initialize Logsene worker: \(err.localizedDescription)")
             maybeError = err
         }
     }

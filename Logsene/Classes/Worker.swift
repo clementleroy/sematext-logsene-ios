@@ -1,8 +1,8 @@
 import Foundation
 import CoreLocation
-import Logging
+import os.log
 
-let logger = Logger(label: "logsene")
+let logger = Logger(subsystem: "sematext", category: "logger")
 
 /**
  Handles uploading of data in batches to Logsene.
@@ -73,7 +73,7 @@ class Worker: NSObject {
             do {
                 try self.handleTimerTick()
             } catch let err {
-                logger.error("Error while handling timer tick: \(err)")
+                logger.error("Error while handling timer tick: \(err.localizedDescription)")
             }
         }
         timer.resume()
@@ -108,7 +108,7 @@ class Worker: NSObject {
             do {
                 try self.handleNewEvent(event)
             } catch let err {
-                logger.error("Error while adding to queue: \(err)")
+                logger.error("Error while adding to queue: \(err.localizedDescription)")
             }
         }
     }
