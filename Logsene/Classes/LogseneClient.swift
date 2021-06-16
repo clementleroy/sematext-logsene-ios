@@ -124,7 +124,7 @@ class LogseneClient {
                 if let jsonObject = (try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())) as? JsonObject {
                     promise.finish(jsonObject)
                 } else {
-                    NSLog("Couldn't deserialize json response, returning empty json object instead")
+                    logger.error("Couldn't deserialize json response, returning empty json object instead")
                     return promise.finish([:])
                 }
             }

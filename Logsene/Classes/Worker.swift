@@ -1,5 +1,8 @@
 import Foundation
 import CoreLocation
+import Logging
+
+let logger = Logger(label: "logsene")
 
 /**
  Handles uploading of data in batches to Logsene.
@@ -70,7 +73,7 @@ class Worker: NSObject {
             do {
                 try self.handleTimerTick()
             } catch let err {
-                NSLog("Error while handling timer tick: \(err)")
+                logger.error("Error while handling timer tick: \(err)")
             }
         }
         timer.resume()
@@ -105,7 +108,7 @@ class Worker: NSObject {
             do {
                 try self.handleNewEvent(event)
             } catch let err {
-                NSLog("Error while adding to queue: \(err)")
+                logger.error("Error while adding to queue: \(err)")
             }
         }
     }
@@ -171,7 +174,7 @@ class Worker: NSObject {
             // `errors` can be either boolean (false) or number (eg. 3), so we need to parse that
             if let errors = result["errors"], NSString(string: "\(errors)").boolValue {
                 let response = String(jsonObject: result)!
-                NSLog("Unable to index all documents. Got response: \(response)")
+                logger.error("Unable to index all documents. Got response: \(response)")
             }
 
             // We set success in any case, as we most likely cannot resolve the issue by sending the same documents again.
@@ -182,10 +185,10 @@ class Worker: NSObject {
                 if error.code == NSURLErrorNotConnectedToInternet {
                     online = false
                 }
-                NSLog("Unable to send request: \(error)")
+                logger.error("Unable to send request: \(error)")
             }
             if let response = maybeResponse {
-                NSLog("Non-success status code received from logsene receiver: \(response.statusCode), response:\n\(String(describing: maybeData))")
+                logger.error("Non-success status code received from logsene receiver: \(response.statusCode), response:\n\(String(describing: maybeData))")
             }
         }.wait()
 
@@ -200,7 +203,7 @@ class Worker: NSObject {
 #if os(iOS)
 extension Worker: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
-        NSLog("Setting location to %d %d", Double(visit.coordinate.latitude),  Double(visit.coordinate.longitude))
+        logger.info("Setting location to \(Double(visit.coordinate.latitude)) \(Double(visit.coordinate.longitude))")
         self.locationSet = true
         self.currentLatitude = Double(visit.coordinate.latitude)
         self.currentLongitude = Double(visit.coordinate.longitude)
@@ -217,14 +220,12 @@ extension Worker: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        NSLog("Unable to get location data: \(error.localizedDescription)")
+        logger.error("Unable to get location data: \(error.localizedDescription)")
     }
     
     func readInitialLocation() {
-        NSLog("Reading initial location")
-        if #available(iOS 9.0, *) {
-            self.locationManager?.requestLocation()
-        }
+        logger.info("Reading initial location")
+        self.locationManager?.requestLocation()
     }
 }
 #endif

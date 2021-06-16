@@ -12,10 +12,15 @@ let package = Package(
             name: "Logsene",
             targets: ["Logsene"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
+    ],
     targets: [
         .target(
             name: "Logsene",
-            dependencies: [],
+            dependencies: [
+                .product(name: "Logging", package: "swift-log")
+            ],
             path: "Logsene/Classes")
     ]
 )

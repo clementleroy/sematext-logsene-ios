@@ -24,7 +24,7 @@ internal struct File {
             try appendPre134(data, to: fileHandle)
         }
         #else
-            try appendPre134(data, to: fileHandle)
+        try appendPre134(data, to: fileHandle)
         #endif
     }
 
@@ -50,7 +50,7 @@ internal struct File {
             return try readPre134(from: fileHandle)
         }
         #else
-            return try readPre134(from: fileHandle)
+        return try readPre134(from: fileHandle)
         #endif
     }
     
@@ -67,9 +67,7 @@ internal struct File {
             let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
             return attributes[.size] as? UInt64 ?? 0
         } catch {
-            #if DEBUG
-            NSLog("Error reading current log file size")
-            #endif
+            logger.error("Error reading current log file size")
         }
         return 0
     }

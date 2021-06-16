@@ -52,7 +52,7 @@ public func LogseneInit(_ appToken: String, type: String, receiverUrl: String = 
         do {
             Logsene.worker = try Worker(client: client, type: type, maxOfflineFileSize: maxOfflineFileSize, maxOfflineFiles: maxOfflineFiles, automaticLocationEnriching: automaticLocationEnriching, useLocationOnlyInForeground: useLocationOnlyInForeground)
         } catch (let err) {
-            NSLog("Unable to initialize Logsene worker: \(err)")
+            logger.error("Unable to initialize Logsene worker: \(err)")
             maybeError = err
         }
     }
@@ -88,7 +88,7 @@ public func LogseneSetDefaultMeta(_ meta: JsonObject?) {
     Pauses sending logs until ```LogseneResumeSendingLogs()``` is called.
 */
 public func LogsenePauseSendingLogs() {
-    NSLog("Pausing the logs sending process")
+    logger.info("Pausing the logs sending process")
     Logsene.worker?.pause()
 }
 
@@ -96,7 +96,7 @@ public func LogsenePauseSendingLogs() {
     Resumes paused logs sending.
 */
 public func LogseneResumeSendingLogs() {
-    NSLog("Resuming the logs sending process")
+    logger.info("Resuming the logs sending process")
     Logsene.worker?.resume();
 }
 
@@ -123,7 +123,7 @@ public func LLogEvent(_ event: JsonObject) {
         worker.addToQueue(enrichedEvent)
     } else {
         // TODO: do we make this a precondition?
-        NSLog("Not logging the event, LogseneInit() needs to be called first!")
+        logger.error("Not logging the event, LogseneInit() needs to be called first!")
     }
 }
 

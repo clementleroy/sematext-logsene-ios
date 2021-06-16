@@ -35,9 +35,7 @@ class FileStorage {
             }
             return documents
         } catch {
-            #if DEBUG
-            NSLog("Error reading data from file \(file.name)")
-            #endif
+            logger.error("Error reading data from file \(file.name)")
         }
         return nil
     }
@@ -83,9 +81,7 @@ class FileStorage {
         do {
             try file.delete()
         } catch {
-            #if DEBUG
-            NSLog("Error while deleting file: \(file.name)")
-            #endif
+            logger.error("Error while deleting file: \(file.name)")
         }
     }
     
@@ -111,9 +107,7 @@ class FileStorage {
                 }
             }
         } catch {
-            #if DEBUG
-            NSLog("Error during files cleanup, skipping")
-            #endif
+            logger.error("Error during files cleanup, skipping")
         }
     }
     
